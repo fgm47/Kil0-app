@@ -576,7 +576,10 @@ var EXERCISES = [
 ];
 
 // ---------- Utilities ----------
-function todayISO(){ return new Date().toISOString().slice(0,10); }
+function todayISO(){
+  var d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
 function fmtDate(iso){
   var d = new Date(iso+'T00:00:00');
   return d.toLocaleDateString('es-ES', {day:'2-digit', month:'short'});
@@ -809,6 +812,7 @@ function renderProgressChart(exerciseId){
   var labels = Object.keys(byDate).sort();
   var values = labels.map(function(d){ return byDate[d]; });
 
+  if (typeof Chart === 'undefined') return;
   var ctx = document.getElementById('exerciseChart').getContext('2d');
   var ink = getComputedStyle(document.body).getPropertyValue('--ink').trim();
   var blue = getComputedStyle(document.body).getPropertyValue('--blue').trim();
@@ -846,6 +850,7 @@ function renderPeso(){
   var d14 = computeDelta14(bw);
   document.getElementById('weight14').textContent = d14 === null ? '—' : ((d14>0?'+':'') + d14.toFixed(1) + ' kg');
 
+  if (typeof Chart !== 'undefined') {
   var ctx = document.getElementById('weightChart').getContext('2d');
   var ink = getComputedStyle(document.body).getPropertyValue('--ink').trim();
   var red = getComputedStyle(document.body).getPropertyValue('--red').trim();
@@ -863,6 +868,7 @@ function renderPeso(){
       }
     }
   });
+  }
 
   var recent = bw.slice(-8).reverse();
   if (!recent.length){
